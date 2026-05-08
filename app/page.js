@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const NAV_LINKS = ["Docs", "Pricing", "Changelog", "GitHub"];
@@ -9,71 +10,71 @@ const FEATURES = [
     icon: "⬡",
     title: "Unified wallet connection",
     desc: "One API to connect wallets across Ethereum, Solana, and any future chain. No more per-chain boilerplate.",
-    code: "const wallet = await kit.connect()",
+    code: "await omnikit.connect('ethereum')",
     highlight: "One line. Any chain."
   },
   {
     icon: "⌬",
     title: "Multi-chain abstraction",
     desc: "Write chain-agnostic code. OmniKit normalizes chain differences so you focus on product, not plumbing.",
-    code: "kit.getBalance({ chain: 'ethereum' })\nkit.getBalance({ chain: 'solana' })",
+    code: "await omnikit.getBalance()\n// Works on any connected chain",
     highlight: "Same API everywhere"
   },
   {
     icon: "⊞",
     title: "React hooks & UI",
     desc: "Drop-in hooks and pre-built components. Connect a wallet in under 10 lines of code.",
-    code: "const { connect, wallet } = useOmniKit()\nawait connect()",
+    code: "const { wallet, connect } = useWallet()\nconst { balance } = useBalance()",
     highlight: "React-first design"
   },
   {
     icon: "◈",
     title: "Auth & sessions",
     desc: "Sign-in with Ethereum and Solana. Persistent session management with secure token handling.",
-    code: "const session = await kit.authenticate({\n  wallet,\n  message: 'Sign in'\n})",
+    code: "const signature = await omnikit.signMessage(\n  'Sign in to MyApp'\n)",
     highlight: "Secure by default"
   },
   {
     icon: "⬕",
     title: "Chain adapters",
     desc: "Modular plugin architecture. Add new chains without touching existing code.",
-    code: "new OmniKit({\n  adapters: [ethereum(), solana(), base()]\n})",
+    code: "new OmniKit({\n  adapters: [...EthereumAdapterFactory.createAdapters()]\n})",
     highlight: "Plug & play"
   },
   {
     icon: "◎",
-    title: "Token & balance APIs",
-    desc: "Fetch balances, tokens, and NFTs with a unified interface across all supported chains.",
-    code: "const tokens = await kit.getTokens({\n  chain: 'ethereum',\n  address: wallet.address\n})",
-    highlight: "Complete data access"
+    title: "Local wallet generation",
+    desc: "Generate wallets locally on device. Private keys never leave your users' machines.",
+    code: "const wallet = await omnikit.createWallet({\n  chain: 'ethereum'\n})",
+    highlight: "Privacy first"
   },
 ];
 
 const CHAIN_SUPPORT = [
-  { 
-    name: "Ethereum", 
-    symbol: "ETH", 
+  {
+    name: "Ethereum",
+    symbol: "ETH",
     status: "Live",
     info: "Full support for EVM chains",
     wallets: "MetaMask, WalletConnect, Coinbase"
   },
-  { 
-    name: "Solana", 
-    symbol: "SOL", 
+  {
+    name: "Solana",
+    symbol: "SOL",
     status: "Live",
     info: "Native Solana integration",
     wallets: "Phantom, Solflare, Backpack"
   },
-  { 
-    name: "Base", 
-    symbol: "BASE", 
+  {
+    name: "Base",
+    symbol: "BASE",
     status: "Soon",
     info: "Coinbase L2 support",
     wallets: "Coming Q2 2025"
   },
-  { 
-    name: "Polygon", 
-    symbol: "POL", 
+  {
+    name: "Polygon",
+    symbol: "POL",
     status: "Soon",
     info: "Polygon PoS & zkEVM",
     wallets: "Coming Q2 2025"
@@ -81,22 +82,22 @@ const CHAIN_SUPPORT = [
 ];
 
 const STEPS = [
-  { 
-    step: "01", 
-    title: "Install", 
-    code: "npm install @omnikit/core",
+  {
+    step: "01",
+    title: "Install",
+    code: "npm install @watchupltd/omnikit",
     desc: "Add OmniKit to your project with a single command. Zero config required."
   },
-  { 
-    step: "02", 
-    title: "Configure", 
+  {
+    step: "02",
+    title: "Configure",
     code: "new OmniKit({ adapters: [...] })",
     desc: "Initialize with your preferred chains. Add or remove adapters anytime."
   },
-  { 
-    step: "03", 
-    title: "Connect", 
-    code: "await kit.connect()",
+  {
+    step: "03",
+    title: "Connect",
+    code: "await omnikit.connect('ethereum')",
     desc: "One method to connect any wallet on any supported chain. That's it."
   },
 ];
@@ -107,7 +108,7 @@ export default function Home() {
   const canvasRef = useRef(null);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText("npm install @omnikit/core");
+    navigator.clipboard.writeText("npm install @watchupltd/omnikit");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -166,18 +167,18 @@ export default function Home() {
         </div>
         <div className="nav-links">
           {NAV_LINKS.map((l) => (
-            <a key={l} href="#" className="nav-link">{l}</a>
+            <a key={l} href={l === "GitHub" ? "https://github.com/tomurashigaraki22/omnikit" : "#"} className="nav-link">{l}</a>
           ))}
         </div>
         <div className="nav-right">
-          <a href="#" className="nav-gh">
+          <a href="https://github.com/tomurashigaraki22/omnikit" className="nav-gh">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.489.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.337 4.687-4.565 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .268.18.58.688.482A10.019 10.019 0 0022 12c0-5.523-4.477-10-10-10z" />
             </svg>
             Star
             <span style={{ color: "var(--text)", fontWeight: 600 }}>—</span>
           </a>
-          <a href="#" className="nav-cta">Get Started</a>
+          <Link href="/login" className="nav-cta">Get Started</Link>
         </div>
       </nav>
 
@@ -187,7 +188,7 @@ export default function Home() {
 
         <div className="hero-badge">
           <span className="hero-badge-dot" />
-          WatchUp LTD · Open Source · v0.1 Alpha
+          WatchUp LTD · Open Source · v0.1.1 Production Ready
         </div>
 
         <h1 className="hero-h1">
@@ -209,7 +210,7 @@ export default function Home() {
           </a>
           <button className="btn-code" onClick={handleCopy} aria-label="Copy install command">
             <span className="btn-code-dollar">$</span>
-            npm install @omnikit/core
+            npm install @watchupltd/omnikit
             <span className={`btn-code-copy ${copied ? "active" : ""}`}>
               {copied ? "copied!" : "copy"}
             </span>
@@ -229,10 +230,10 @@ export default function Home() {
             <div className="terminal-body">
               <div className="terminal-line">
                 <span className="terminal-prompt">$</span>
-                <span className="terminal-command">npm install @omnikit/core</span>
+                <span className="terminal-command">npm install @watchupltd/omnikit</span>
               </div>
               <div className="terminal-line">
-                <span className="terminal-output">✓ Installed @omnikit/core</span>
+                <span className="terminal-output">✓ Installed @watchupltd/omnikit</span>
               </div>
               <div className="terminal-line">
                 <span className="terminal-prompt">$</span>
@@ -272,12 +273,12 @@ export default function Home() {
           <span className="hero-badge-dot" />
           Features
         </div>
-        
+
         <h2 className="section-title-hero" style={{ animationDelay: '0.08s' }}>
           First-class<br />
           <em>developer experience</em>
         </h2>
-        
+
         <p className="section-sub-hero" style={{ animationDelay: '0.16s' }}>
           Built for TypeScript-first teams. Zero config overhead. One coherent API across every chain you ship on.
         </p>
@@ -289,7 +290,7 @@ export default function Home() {
                 <div className="feature-icon-hero">{f.icon}</div>
                 <h3 className="feature-title-hero">{f.title}</h3>
                 <p className="feature-desc-hero">{f.desc}</p>
-                
+
                 <div className="terminal-window terminal-compact">
                   <div className="terminal-header">
                     <div className="terminal-dots">
@@ -319,7 +320,7 @@ export default function Home() {
           <span className="hero-badge-dot" />
           Developer Experience
         </div>
-        
+
         <h2 className="section-title-hero" style={{ animationDelay: '0.08s' }}>
           From zero to <em>connected</em><br />
           in minutes.
@@ -331,7 +332,7 @@ export default function Home() {
               <div className="step-badge">{s.step}</div>
               <h3 className="step-title-hero">{s.title}</h3>
               <p className="step-desc-hero">{s.desc}</p>
-              
+
               <div className="terminal-window terminal-compact">
                 <div className="terminal-header">
                   <div className="terminal-dots">
@@ -361,7 +362,7 @@ export default function Home() {
                 <span className="dot green"></span>
               </div>
               <div className="terminal-tabs">
-                {["connect.ts", "balance.ts", "auth.ts"].map((tab, i) => (
+                {["connect.ts", "balance.ts", "wallet.ts"].map((tab, i) => (
                   <button
                     key={tab}
                     className={`terminal-tab ${activeTab === i ? "active" : ""}`}
@@ -379,110 +380,105 @@ export default function Home() {
                     <span className="c-keyword">import</span>{" "}
                     <span className="c-val">{"{ OmniKit }"}</span>{" "}
                     <span className="c-keyword">from</span>{" "}
-                    <span className="c-string">&apos;@omnikit/core&apos;</span>
+                    <span className="c-string">&apos;@watchupltd/omnikit&apos;</span>
                   </div>
                   <div className="terminal-line">
                     <span className="c-keyword">import</span>{" "}
-                    <span className="c-val">{"{ ethereum, solana }"}</span>{" "}
+                    <span className="c-val">{"{ EthereumAdapterFactory }"}</span>{" "}
                     <span className="c-keyword">from</span>{" "}
-                    <span className="c-string">&apos;@omnikit/adapters&apos;</span>
+                    <span className="c-string">&apos;@watchupltd/omnikit-ethereum&apos;</span>
                   </div>
                   <div className="terminal-line">&nbsp;</div>
                   <div className="terminal-line">
                     <span className="c-keyword">const</span>{" "}
-                    <span className="c-val">kit</span> = <span className="c-keyword">new</span>{" "}
+                    <span className="c-val">omnikit</span> = <span className="c-keyword">new</span>{" "}
                     <span className="c-fn">OmniKit</span>{"({"}
                   </div>
                   <div className="terminal-line">
-                    {"  "}<span className="c-prop">adapters</span>: [<span className="c-fn">ethereum</span>(), <span className="c-fn">solana</span>()],
+                    {"  "}<span className="c-prop">adapters</span>: EthereumAdapterFactory.<span className="c-fn">createAdapters</span>(),
                   </div>
                   <div className="terminal-line">
-                    {"  "}<span className="c-prop">auth</span>: {"{ "}<span className="c-prop">sessionDuration</span>: <span className="c-string">&apos;7d&apos;</span>{" }"}
+                    {"  "}<span className="c-prop">autoConnect</span>: <span className="c-keyword">true</span>
                   </div>
                   <div className="terminal-line">{"})"}  </div>
                   <div className="terminal-line">&nbsp;</div>
                   <div className="terminal-line">
-                    <span className="c-comment">{"// Connect any wallet — one unified API"}</span>
+                    <span className="c-comment">{"// Connect to Ethereum"}</span>
                   </div>
                   <div className="terminal-line">
-                    <span className="c-keyword">const</span>{" "}
-                    <span className="c-val">wallet</span> = <span className="c-keyword">await</span>{" "}
-                    <span className="c-val">kit</span>.<span className="c-fn">connect</span>()
+                    <span className="c-keyword">await</span>{" "}
+                    <span className="c-val">omnikit</span>.<span className="c-fn">connect</span>(<span className="c-string">&apos;ethereum&apos;</span>)
                   </div>
                   <div className="terminal-line">&nbsp;</div>
                   <div className="terminal-line">
-                    <span className="c-keyword">console</span>.<span className="c-fn">log</span>(wallet.<span className="c-prop">address</span>, wallet.<span className="c-prop">chain</span>)
+                    <span className="c-keyword">console</span>.<span className="c-fn">log</span>(<span className="c-string">&apos;Connected!&apos;</span>)
                   </div>
                 </div>
               )}
               {activeTab === 1 && (
                 <div>
                   <div className="terminal-line">
-                    <span className="c-comment">{"// Unified balance across any chain"}</span>
+                    <span className="c-comment">{"// Get balance on any connected chain"}</span>
                   </div>
                   <div className="terminal-line">
                     <span className="c-keyword">const</span>{" "}
                     <span className="c-val">balance</span> = <span className="c-keyword">await</span>{" "}
-                    <span className="c-val">kit</span>.<span className="c-fn">getBalance</span>{"({"}
+                    <span className="c-val">omnikit</span>.<span className="c-fn">getBalance</span>()
                   </div>
                   <div className="terminal-line">
-                    {"  "}<span className="c-prop">chain</span>: <span className="c-string">&apos;ethereum&apos;</span>,
+                    <span className="c-keyword">console</span>.<span className="c-fn">log</span>(<span className="c-string">&apos;Balance:&apos;</span>, balance)
                   </div>
-                  <div className="terminal-line">
-                    {"  "}<span className="c-prop">address</span>: wallet.<span className="c-prop">address</span>,
-                  </div>
-                  <div className="terminal-line">{"})"}  </div>
                   <div className="terminal-line">&nbsp;</div>
                   <div className="terminal-line">
-                    <span className="c-comment">{"// Fetch all tokens in one call"}</span>
+                    <span className="c-comment">{"// Switch chains seamlessly"}</span>
+                  </div>
+                  <div className="terminal-line">
+                    <span className="c-keyword">await</span>{" "}
+                    <span className="c-val">omnikit</span>.<span className="c-fn">switchChain</span>(<span className="c-string">&apos;solana&apos;</span>)
                   </div>
                   <div className="terminal-line">
                     <span className="c-keyword">const</span>{" "}
-                    <span className="c-val">tokens</span> = <span className="c-keyword">await</span>{" "}
-                    <span className="c-val">kit</span>.<span className="c-fn">getTokens</span>{"({"}
+                    <span className="c-val">solBalance</span> = <span className="c-keyword">await</span>{" "}
+                    <span className="c-val">omnikit</span>.<span className="c-fn">getBalance</span>()
                   </div>
-                  <div className="terminal-line">
-                    {"  "}<span className="c-prop">chain</span>: <span className="c-string">&apos;solana&apos;</span>,
-                  </div>
-                  <div className="terminal-line">
-                    {"  "}<span className="c-prop">address</span>: wallet.<span className="c-prop">address</span>,
-                  </div>
-                  <div className="terminal-line">{"})"}</div>
                   <div className="terminal-line">&nbsp;</div>
                   <div className="terminal-line">
-                    <span className="c-comment">{"// { native: '1.24 ETH', tokens: [...] }"}</span>
+                    <span className="c-comment">{"// Same API, different chains"}</span>
+                  </div>
+                  <div className="terminal-line">
+                    <span className="c-keyword">console</span>.<span className="c-fn">log</span>(<span className="c-string">&apos;SOL Balance:&apos;</span>, solBalance)
                   </div>
                 </div>
               )}
               {activeTab === 2 && (
                 <div>
                   <div className="terminal-line">
-                    <span className="c-comment">{"// Sign-in with Ethereum or Solana"}</span>
+                    <span className="c-comment">{"// Sign messages for authentication"}</span>
                   </div>
                   <div className="terminal-line">
                     <span className="c-keyword">const</span>{" "}
-                    <span className="c-val">session</span> = <span className="c-keyword">await</span>{" "}
-                    <span className="c-val">kit</span>.<span className="c-fn">authenticate</span>{"({"}
+                    <span className="c-val">signature</span> = <span className="c-keyword">await</span>{" "}
+                    <span className="c-val">omnikit</span>.<span className="c-fn">signMessage</span>(<span className="c-string">&apos;Sign in to MyApp&apos;</span>)
+                  </div>
+                  <div className="terminal-line">&nbsp;</div>
+                  <div className="terminal-line">
+                    <span className="c-comment">{"// Generate wallets locally"}</span>
                   </div>
                   <div className="terminal-line">
-                    {"  "}<span className="c-prop">wallet</span>: wallet,
+                    <span className="c-keyword">const</span>{" "}
+                    <span className="c-val">newWallet</span> = <span className="c-keyword">await</span>{" "}
+                    <span className="c-val">omnikit</span>.<span className="c-fn">createWallet</span>{"({"}
                   </div>
                   <div className="terminal-line">
-                    {"  "}<span className="c-prop">message</span>: <span className="c-string">&apos;Sign in to MyApp&apos;</span>,
+                    {"  "}<span className="c-prop">chain</span>: <span className="c-string">&apos;ethereum&apos;</span>
                   </div>
                   <div className="terminal-line">{"})"}  </div>
                   <div className="terminal-line">&nbsp;</div>
                   <div className="terminal-line">
-                    <span className="c-comment">{"// Verify on your backend"}</span>
+                    <span className="c-comment">{"// { address, privateKey, mnemonic }"}</span>
                   </div>
                   <div className="terminal-line">
-                    <span className="c-keyword">const</span>{" "}
-                    <span className="c-val">valid</span> = <span className="c-keyword">await</span>{" "}
-                    <span className="c-val">kit</span>.<span className="c-fn">verify</span>(session.<span className="c-prop">token</span>)
-                  </div>
-                  <div className="terminal-line">&nbsp;</div>
-                  <div className="terminal-line">
-                    <span className="c-comment">{"// { address, chain, verified: true }"}</span>
+                    <span className="c-keyword">console</span>.<span className="c-fn">log</span>(newWallet.<span className="c-prop">address</span>)
                   </div>
                 </div>
               )}
@@ -499,12 +495,12 @@ export default function Home() {
           <span className="hero-badge-dot" />
           Chain Support
         </div>
-        
+
         <h2 className="section-title-hero" style={{ animationDelay: '0.08s' }}>
           Start with <em>two.</em><br />
           Scale to any.
         </h2>
-        
+
         <p className="section-sub-hero" style={{ animationDelay: '0.16s' }}>
           Ethereum and Solana are fully supported at launch. The modular adapter system means adding new chains never requires touching existing code.
         </p>
@@ -519,10 +515,10 @@ export default function Home() {
                   {c.status}
                 </span>
               </div>
-              
+
               <div className="chain-symbol-hero">{c.symbol}</div>
               <p className="chain-info-hero">{c.info}</p>
-              
+
               <div className="terminal-window terminal-compact">
                 <div className="terminal-header">
                   <div className="terminal-dots">
@@ -546,21 +542,21 @@ export default function Home() {
       {/* CTA */}
       <section className="cta-section-hero">
         <div className="cta-glow" aria-hidden="true" />
-        
+
         <div className="hero-badge" style={{ animationDelay: '0s' }}>
           <span className="hero-badge-dot" />
           Open Source
         </div>
-        
+
         <h2 className="cta-title-hero" style={{ animationDelay: '0.08s' }}>
           Build faster.<br />
           Ship with <em>confidence.</em>
         </h2>
-        
+
         <p className="cta-sub-hero" style={{ animationDelay: '0.16s' }}>
           OmniKit is open source, TypeScript-native, and designed to grow with your stack. Start free, self-host forever.
         </p>
-        
+
         <div className="hero-actions" style={{ animationDelay: '0.24s' }}>
           <a href="#" className="btn-primary">
             Start Building Free
@@ -570,7 +566,7 @@ export default function Home() {
           </a>
           <button className="btn-code" onClick={handleCopy} aria-label="Copy install command">
             <span className="btn-code-dollar">$</span>
-            npm install @omnikit/core
+            npm install @watchupltd/omnikit
             <span className={`btn-code-copy ${copied ? "active" : ""}`}>
               {copied ? "copied!" : "copy"}
             </span>
@@ -591,9 +587,10 @@ export default function Home() {
             </p>
           </div>
           <div className="footer-links-hero">
-            {["Docs", "GitHub", "Changelog", "Privacy"].map((l) => (
-              <a key={l} href="#" className="footer-link-hero">{l}</a>
-            ))}
+            <a href="#" className="footer-link-hero">Docs</a>
+            <a href="https://github.com/tomurashigaraki22/omnikit" className="footer-link-hero">GitHub</a>
+            <a href="#" className="footer-link-hero">Changelog</a>
+            <a href="#" className="footer-link-hero">Privacy</a>
           </div>
         </div>
       </footer>
