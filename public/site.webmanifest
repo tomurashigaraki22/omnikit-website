@@ -1,0 +1,16 @@
+{
+  "name": "OmniKit - Multi-chain Wallet SDK",
+  "short_name": "OmniKit",
+  "description": "One SDK for every chain, every wallet",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
