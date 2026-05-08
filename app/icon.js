@@ -31,8 +31,8 @@ export default async function Icon() {
         >
           <img
             src={`data:image/png;base64,${Buffer.from(logoBuffer).toString('base64')}`}
-            width="28"
-            height="28"
+            width={28}
+            height={28}
             style={{
               objectFit: 'contain',
             }}
